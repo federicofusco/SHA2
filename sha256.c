@@ -10,7 +10,16 @@ unsigned int right_rotate ( unsigned int c, int shift ) {
 char* sha256 ( char* input ) {
 
     // Initializes hash values
-    unsigned int h[8] = { 0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19 };
+    unsigned int h[8] = { 
+        0x6a09e667, 
+        0xbb67ae85, 
+        0x3c6ef372, 
+        0xa54ff53a, 
+        0x510e527f, 
+        0x9b05688c, 
+        0x1f83d9ab, 
+        0x5be0cd19 
+    };
 
     // Initializes constants
     unsigned int k[64] = {
@@ -25,13 +34,12 @@ char* sha256 ( char* input ) {
     };
 
     // Padds the input (pre-processing)
-    char padding[( (int) ceil ( (float) strlen ( input ) / 64.0 ) * 64 )];
+    char padding[( (int) ceil ( ( (float) strlen ( input ) + 9.0 ) / 64.0 ) * 64 )];
     for ( int x = 0; x < sizeof ( padding ); x++ ) {
         padding[x] = 0x00;
     }
 
     strcpy ( padding, input );
-    padding[strlen ( input )] = 0x80;
 
     // Append a 64-bit big endian int which represents the length of the input in bits
     long long int length = strlen ( input ) * 8;
@@ -43,6 +51,7 @@ char* sha256 ( char* input ) {
     padding[sizeof ( padding ) - 3] = ( length >> 16 ) & 0xFF;
     padding[sizeof ( padding ) - 2] = ( length >> 8 ) & 0xFF;
     padding[sizeof ( padding ) - 1]     = length & 0xFF;
+    padding[strlen ( input )] = 0x80;
 
     for ( int x = 0; x < sizeof ( padding ); x += 64 ) {
 
@@ -137,5 +146,18 @@ char* sha256 ( char* input ) {
     sprintf ( output, "%X%X%X%X%X%X%X%X", h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7] );
     
     return output;
+
+}
+
+int main ( int argc, char* argv[] ) {
+
+    if ( argc < 2 ) {
+        printf ( "Usage: ./sha256 <data>\n" );
+        exit ( EXIT_FAILURE );
+    }
+
+    for ( int x = 1; x < argc; x++ ) {
+        printf ( "[%d]: %s\n", x, sha256 ( argv[x] ) );
+    }
 
 }
