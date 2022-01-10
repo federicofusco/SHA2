@@ -3,6 +3,8 @@
 #include <string.h>
 #include <math.h>
 
+#include "sha256.h"
+
 unsigned int right_rotate ( unsigned int c, int shift ) {
     return  (c >> shift) | ( c << ( sizeof ( c ) * 8 - shift ) );
 }
@@ -146,7 +148,7 @@ char* sha256 ( char* input ) {
     }
 
     char* output = malloc ( sizeof ( char ) * 64 );
-    sprintf ( output, "%X%X%X%X%X%X%X%X", h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7] );
+    sprintf ( output, "%08X%08X%08X%08X%08X%08X%08X%08X", h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7] );
     
     return output;
 
