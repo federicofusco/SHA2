@@ -4,20 +4,19 @@
 #include <math.h>
 
 #include "rotate.h"
-#include "sha256.h"
 
-char* sha256 ( char* input ) {
+char* sha224 ( char* input ) {
 
     // Initializes hash values
     unsigned int h[8] = { 
-        0x6a09e667, 
-        0xbb67ae85, 
-        0x3c6ef372, 
-        0xa54ff53a, 
-        0x510e527f, 
-        0x9b05688c, 
-        0x1f83d9ab, 
-        0x5be0cd19 
+        0xc1059ed8, 
+        0x367cd507, 
+        0x3070dd17, 
+        0xf70e5939, 
+        0xffc00b31, 
+        0x68581511, 
+        0x64f98fa7, 
+        0xbefa4fa4
     };
 
     // Initializes constants
@@ -144,8 +143,8 @@ char* sha256 ( char* input ) {
 
     }
 
-    char* output = malloc ( sizeof ( char ) * 64 );
-    sprintf ( output, "%08X%08X%08X%08X%08X%08X%08X%08X", h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7] );
+    char* output = malloc ( sizeof ( char ) * 56 );
+    sprintf ( output, "%08X%08X%08X%08X%08X%08X%08X", h[0], h[1], h[2], h[3], h[4], h[5], h[6] );
     
     return output;
 

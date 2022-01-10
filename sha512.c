@@ -3,11 +3,8 @@
 #include <string.h>
 #include <math.h>
 
+#include "rotate.h"
 #include "sha512.h"
-
-unsigned long long int long_right_rotate ( unsigned long long int c, int shift ) {
-    return  (c >> shift) | ( c << ( sizeof ( c ) * 8 - shift ) );
-}
 
 char* sha512 ( char* input ) {
 
