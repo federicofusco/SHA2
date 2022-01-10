@@ -34,12 +34,16 @@ char* sha256 ( char* input ) {
     };
 
     // Padds the input (pre-processing)
-    char padding[( (int) ceil ( ( (float) strlen ( input ) + 9.0 ) / 64.0 ) * 64 )];
-    for ( int x = 0; x < sizeof ( padding ); x++ ) {
-        padding[x] = 0x00;
+    unsigned char padding[( (int) ceil ( ( (float) strlen ( input ) + 9.0 ) / 64.0 ) * 64 )];
+    for ( unsigned int x = 0; x < sizeof ( padding ); x++ ) {
+        if ( x < strlen ( input ) ) {
+            padding[x] = input[x];
+        } else if ( x == strlen ( input ) ) {
+            padding[x] = 0x80; 
+        } else {
+            padding[x] = 0x00;
+        }
     }
-
-    strcpy ( padding, input );
 
     // Append a 64-bit big endian int which represents the length of the input in bits
     long long int length = strlen ( input ) * 8;
@@ -51,9 +55,8 @@ char* sha256 ( char* input ) {
     padding[sizeof ( padding ) - 3] = ( length >> 16 ) & 0xFF;
     padding[sizeof ( padding ) - 2] = ( length >> 8 ) & 0xFF;
     padding[sizeof ( padding ) - 1]     = length & 0xFF;
-    padding[strlen ( input )] = 0x80;
 
-    for ( int x = 0; x < sizeof ( padding ); x += 64 ) {
+    for ( unsigned int x = 0; x < sizeof ( padding ); x += 64 ) {
 
         // Splits the padding into 64 byte chunks
         char chunk[64] = {
@@ -72,7 +75,7 @@ char* sha256 ( char* input ) {
 
         // Copies chunk into first 16 words of the message schedule
         unsigned int w[64] = {0};
-        for ( int y = 0; y < sizeof ( chunk ); y += 4 ) {
+        for ( unsigned int y = 0; y < sizeof ( chunk ); y += 4 ) {
             char word[4] = { chunk[y + 3], chunk[y + 2], chunk[y + 1], chunk[y] };
             w[y / 4] = *(int *)word;
         }
@@ -146,18 +149,5 @@ char* sha256 ( char* input ) {
     sprintf ( output, "%X%X%X%X%X%X%X%X", h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7] );
     
     return output;
-
-}
-
-int main ( int argc, char* argv[] ) {
-
-    if ( argc < 2 ) {
-        printf ( "Usage: ./sha256 <data>\n" );
-        exit ( EXIT_FAILURE );
-    }
-
-    for ( int x = 1; x < argc; x++ ) {
-        printf ( "[%d]: %s\n", x, sha256 ( argv[x] ) );
-    }
 
 }
