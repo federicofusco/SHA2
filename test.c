@@ -2,20 +2,36 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "sha224.h"
 #include "sha256.h"
+#include "sha384.h"
 #include "sha512.h"
 
 /**
- * All these tests come from the algorithm examples specified by the FIPS 180-2
- * specification (https://csrc.nist.gov/csrc/media/publications/fips/180/2/archive/2002-08-01/documents/fips180-2.pdf)
+ * All these tests come from the algorithm examples specified by the FIPS 180-4 
+ * specification in the implementation notes (https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/<algorithm>.pdf)
  */
 
 int main ( int argc, char* argv[] ) {
 
     int error = 0;
 
+    // Tests SHA224
+    printf ( ":======== SHA-224 ========:\n" );
+    if ( strcmp ( sha224 ( "abc" ), "23097D223405D8228642A477BDA255B32AADBCE4BDA0B3F7E36C9DA7" ) != 0 ) {
+        printf ( "SHA224              FAILED!\n" );
+        error = 1;
+    } else 
+        printf ( "SHA224              PASSED!\n" );
+
+    if ( strcmp ( sha224 ( "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq" ), "75388B16512776CC5DBA5DA1FD890150B0C6455CB4F58B1952522525" ) != 0 ) {
+        printf ( "SHA224 (Multiblock) FAILED!\n" );
+        error = 1; 
+    } else
+        printf ( "SHA224 (Multiblock) PASSED!\n" );
+
     // Tests SHA256
-    printf ( ":======== SHA-256 ========:\n" );
+    printf ( "\n:======== SHA-256 ========:\n" );
     if ( strcmp ( sha256 ( "abc" ), "BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD" ) != 0 ) {
         printf ( "SHA256              FAILED!\n" );
         error = 1;
@@ -27,6 +43,20 @@ int main ( int argc, char* argv[] ) {
         error = 1;
     } else
         printf ( "SHA256 (Multiblock) PASSED!\n" );
+
+    // Tests SHA384
+    printf ( "\n:======== SHA-384 ========:\n" );
+    if ( strcmp ( sha384 ( "abc" ), "CB00753F45A35E8BB5A03D699AC65007272C32AB0EDED1631A8B605A43FF5BED8086072BA1E7CC2358BAECA134C825A7" ) != 0 ) {
+        printf ( "SHA384              FAILED!\n" );
+        error = 1;
+    } else 
+        printf ( "SHA384              PASSED!\n" );
+
+    if ( strcmp ( sha384 ( "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu" ), "09330C33F71147E83D192FC782CD1B4753111B173B3B05D22FA08086E3B0F712FCC7C71A557E2DB966C3E9FA91746039" ) != 0 ) {
+        printf ( "SHA384 (Multiblock) FAILED!\n" );
+        error = 1;
+    } else
+        printf ( "SHA384 (Multiblock) PASSED!\n" );
 
     // Tests SHA512
     printf ( "\n:======== SHA-512 ========:\n" );
@@ -42,6 +72,8 @@ int main ( int argc, char* argv[] ) {
         error = 1;
     } else 
         printf ( "SHA512 (Multiblock) PASSED!\n" );
+
+    
 
     if ( error == 0 ) {
         printf ( "\n###########################\n" );
