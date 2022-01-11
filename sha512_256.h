@@ -1,0 +1,1 @@
+char *sha512_256(char *input);
